@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tesla OAuth callback</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 40rem; margin: 2rem auto; padding: 0 1rem; }
+    code { word-break: break-all; background: #f4f4f4; padding: 0.5rem 0.75rem; display: block; border-radius: 4px; }
+    button { margin-top: 0.75rem; padding: 0.5rem 1rem; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>Authorization code</h1>
+  <p id="status">Looking for <code>code</code> in the URL…</p>
+  <code id="code" hidden></code>
+  <button id="copy" hidden type="button">Copy code</button>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+    const status = document.getElementById("status");
+    const codeEl = document.getElementById("code");
+    const copyBtn = document.getElementById("copy");
+    if (code) {
+      status.textContent = "Copy this code and paste it where prompted:";
+      codeEl.textContent = code;
+      codeEl.hidden = false;
+      copyBtn.hidden = false;
+      copyBtn.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(code);
+          copyBtn.textContent = "Copied";
+        } catch {
+          copyBtn.textContent = "Select and copy manually";
+        }
+      });
+    } else {
+      status.textContent = "No code query parameter found in this URL.";
+    }
+  </script>
+</body>
+</html>
